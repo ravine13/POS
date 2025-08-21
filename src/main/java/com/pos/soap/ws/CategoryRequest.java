@@ -43,7 +43,4 @@ public class CategoryRequest {
         this.name = name;
     }
 
-    public Category getCategory() {
-        return Category;
-    }
 }

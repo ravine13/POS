@@ -1,6 +1,5 @@
 package com.pos.soap.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,10 +19,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Each order belongs to one customer
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    // Store just the customer ID
+    @Column(name = "customer_id", nullable = false)
+    private Long customerId;
 
     private LocalDateTime orderDate;
 
