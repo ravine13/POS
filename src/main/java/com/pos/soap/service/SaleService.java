@@ -61,8 +61,8 @@ public class SaleService {
     // Safe update method
     public Sale updateSale(Long id, Sale saleDetails) {
         Sale sale = getSaleByIdOrThrow(id);
-        sale.setCashier(saleDetails.getCashier());
-        sale.setProduct(saleDetails.getProduct());
+        sale.setCashierId(saleDetails.getCashierId()); // use ID now
+        sale.setProductId(saleDetails.getProductId()); // use ID now
         sale.setQuantity(saleDetails.getQuantity());
         sale.setTotalPrice(saleDetails.getTotalPrice());
         sale.setSaleDate(saleDetails.getSaleDate());

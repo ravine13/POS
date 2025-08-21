@@ -46,9 +46,14 @@ public class CategoryEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SaveCategoryRequest")
     @ResponsePayload
     public CategoryResponse saveCategory(@RequestPayload CategoryRequest request) {
-        Category category = categoryService.saveCategory(request.getCategory());
+        Category category = new Category();
+        category.setId(request.getId());
+        category.setName(request.getName());
+
+        Category savedCategory = categoryService.saveCategory(category);
+
         CategoryResponse response = new CategoryResponse();
-        response.getCategories().add(category);
+        response.getCategories().add(savedCategory);
         return response;
     }
 

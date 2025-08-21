@@ -24,7 +24,6 @@ public class Product {
 
     private int quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
 }
