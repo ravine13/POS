@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://pos.com/soap/categories"
+           xmlns:tns="http://pos.com/soap/categories"
+           elementFormDefault="qualified">
+
+    <!-- Request: get category by ID -->
+    <xs:element name="getCategoryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Response: returns category details -->
+    <xs:element name="getCategoryResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="description" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Request: get all categories -->
+    <xs:element name="getAllCategoriesRequest" type="xs:anyType"/>
+
+    <!-- Response: returns a list of categories -->
+    <xs:element name="getAllCategoriesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="categories" type="tns:category" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Complex type for Category -->
+    <xs:complexType name="category">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="description" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

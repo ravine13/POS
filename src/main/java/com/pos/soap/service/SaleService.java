@@ -29,7 +29,7 @@ public class SaleService {
 
     // Get sales by customer (user) ID
     public List<Sale> getSalesByCustomerId(Long customerId) {
-        return saleRepository.findByCustomerId(customerId);
+        return saleRepository.findByCustomer_Id(customerId);
     }
 
     // Get sales by specific date

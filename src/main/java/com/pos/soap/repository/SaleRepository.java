@@ -11,7 +11,8 @@ import java.util.List;
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     // Find all sales for a specific customer
-    List<Sale> findByCustomerId(Long customerId);
+    List<Sale> findByCustomer_Id(Long customerId);
+
 
     // Find sales made on a specific date
     List<Sale> findBySaleDate(LocalDate saleDate);

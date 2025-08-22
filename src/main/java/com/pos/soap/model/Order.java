@@ -20,8 +20,9 @@ public class Order {
     private Long id;
 
     // Store just the customer ID
-    @Column(name = "customer_id", nullable = false)
-    private Long customerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     private LocalDateTime orderDate;
 

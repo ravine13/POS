@@ -20,6 +20,14 @@ public class Sale {
     @Column(name = "user_id", nullable = false)
     private Long cashierId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "customer_id",
+            referencedColumnName = "id",   // explicitly tell Hibernate to use customers.id
+            nullable = false
+    )
+    private Customer customer;
+
 
     @Column(name = "product_id", nullable = false)
     private Long productId;

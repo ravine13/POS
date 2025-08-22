@@ -20,5 +20,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 
     // Find products with stock less than a given threshold
-    List<Product> findByStockQuantityLessThan(Integer quantity);
+    List<Product> findByQuantityLessThan(Integer quantity);
 }

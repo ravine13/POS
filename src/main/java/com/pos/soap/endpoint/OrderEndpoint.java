@@ -1,7 +1,9 @@
 package com.pos.soap.endpoint;
 
 import com.pos.soap.model.Order;
+import com.pos.soap.model.Customer; // ✅ Added import for Customer
 import com.pos.soap.service.OrderService;
+import com.pos.soap.service.CustomerService; // ✅ Added import for CustomerService
 import com.pos.soap.ws.OrderRequest;
 import com.pos.soap.ws.OrderResponse;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -17,9 +19,12 @@ public class OrderEndpoint {
     private static final String NAMESPACE_URI = "http://pos.com/soap/ws";
 
     private final OrderService orderService;
+    private final CustomerService customerService; // ✅ Added CustomerService dependency
 
-    public OrderEndpoint(OrderService orderService) {
+    // ✅ Updated constructor to inject CustomerService as well
+    public OrderEndpoint(OrderService orderService, CustomerService customerService) {
         this.orderService = orderService;
+        this.customerService = customerService;
     }
 
     // Get all orders
@@ -58,7 +63,12 @@ public class OrderEndpoint {
     public OrderResponse saveOrder(@RequestPayload OrderRequest request) {
         Order order = new Order();
         order.setId(request.getId());
-        order.setCustomerId(request.getCustomerId());
+
+        // ✅ CHANGED: Fetch customer from DB and set it
+        Customer customer = customerService.getCustomerById(request.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        order.setCustomer(customer);
+
         order.setOrderDate(request.getOrderDate());
         order.setStatus(request.getStatus());
 

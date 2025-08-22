@@ -1,7 +1,11 @@
 package com.pos.soap.endpoint;
 
+import com.pos.soap.model.Order;
 import com.pos.soap.model.OrderItem;
+import com.pos.soap.model.Product;
 import com.pos.soap.service.OrderItemService;
+import com.pos.soap.service.OrderService;   // ✅ Added
+import com.pos.soap.service.ProductService; // ✅ Added
 import com.pos.soap.ws.OrderItemRequest;
 import com.pos.soap.ws.OrderItemResponse;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -17,9 +21,16 @@ public class OrderItemEndpoint {
     private static final String NAMESPACE_URI = "http://pos.com/soap/ws";
 
     private final OrderItemService orderItemService;
+    private final OrderService orderService;     // ✅ Added
+    private final ProductService productService; // ✅ Added
 
-    public OrderItemEndpoint(OrderItemService orderItemService) {
+    // ✅ Updated constructor to inject new services
+    public OrderItemEndpoint(OrderItemService orderItemService,
+                             OrderService orderService,
+                             ProductService productService) {
         this.orderItemService = orderItemService;
+        this.orderService = orderService;
+        this.productService = productService;
     }
 
     // Get all order items
@@ -58,8 +69,17 @@ public class OrderItemEndpoint {
     public OrderItemResponse saveOrderItem(@RequestPayload OrderItemRequest request) {
         OrderItem item = new OrderItem();
         item.setId(request.getId());
-        item.setOrderId(request.getOrderId());
-        item.setProductId(request.getProductId());
+
+        // ✅ Instead of setting orderId manually → fetch the full Order entity
+        Order order = orderService.getOrderById(request.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        item.setOrder(order); // ✅ Correct association
+
+        // ✅ Instead of setting productId manually → fetch the full Product entity
+        Product product = productService.getProductById(request.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        item.setProduct(product); // ✅ Correct association
+
         item.setQuantity(request.getQuantity());
         item.setPrice(request.getPrice());
 
