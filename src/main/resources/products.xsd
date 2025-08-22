@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://pos.com/soap/ws"
+           xmlns:tns="http://pos.com/soap/ws"
+           elementFormDefault="qualified">
+
+    <!-- ===== Entity Type ===== -->
+    <xs:complexType name="Product">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" minOccurs="0"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="price" type="xs:double"/>
+            <xs:element name="quantity" type="xs:int"/>
+            <xs:element name="categoryId" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ===== Requests ===== -->
+    <xs:element name="GetProductByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetAllProductsRequest">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="SaveProductRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- id optional for creates -->
+                <xs:element name="id" type="xs:long" minOccurs="0"/>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="price" type="xs:double"/>
+                <xs:element name="quantity" type="xs:int"/>
+                <xs:element name="categoryId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeleteProductRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ===== Response ===== -->
+    <xs:element name="ProductResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="product" type="tns:Product" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

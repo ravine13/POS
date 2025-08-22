@@ -40,8 +40,7 @@ public class WebServiceConfig {
         return new SimpleXsdSchema(new org.springframework.core.io.ClassPathResource("categories.xsd"));
     }
 
-    // 4️⃣ Repeat for other entities: Product, Customer, Order, Sale, User, OrderItem
-    // Example for Product:
+
     @Bean(name = "products")
     public DefaultWsdl11Definition productsWsdl(XsdSchema productsSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
