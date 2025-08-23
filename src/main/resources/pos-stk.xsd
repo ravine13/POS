@@ -1,0 +1,25 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/pos/stk"
+           xmlns="http://example.com/pos/stk"
+           elementFormDefault="qualified">
+
+    <xs:element name="InitiateStkRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="amount" type="xs:int"/>
+                <xs:element name="msisdn" type="xs:string"/>
+                <xs:element name="accountRef" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="InitiateStkResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="checkoutRequestId" type="xs:string"/>
+                <xs:element name="responseMessage" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
