@@ -15,8 +15,6 @@ public class MpesaService {
         String transactionDesc = req.getTransactionDesc();
 
 
-        // (OAuth token, STK Push request, etc.)
-
         InitiateStkResponse response = new InitiateStkResponse();
         response.setResponseCode("0"); // success code
         response.setResponseMessage(

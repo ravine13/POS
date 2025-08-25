@@ -1,24 +1,18 @@
 package com.pos.soap.ws;
 
-import com.pos.soap.model.Category;
+import javax.xml.bind.annotation.*;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "CategoryRequest")
+@XmlRootElement(name = "CategoryRequest", namespace = "http://pos.com/soap/categories")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CategoryRequest", propOrder = {
         "id",
         "name"
-})
+}, namespace = "http://pos.com/soap/categories")
 public class CategoryRequest {
 
     private Long id;
     private String name;
 
-    // Constructors
     public CategoryRequest() {}
 
     public CategoryRequest(Long id, String name) {
@@ -26,7 +20,6 @@ public class CategoryRequest {
         this.name = name;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -42,5 +35,4 @@ public class CategoryRequest {
     public void setName(String name) {
         this.name = name;
     }
-
 }
