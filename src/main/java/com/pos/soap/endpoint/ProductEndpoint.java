@@ -1,70 +1,46 @@
 package com.pos.soap.endpoint;
 
-import com.pos.soap.model.Product;
-import com.pos.soap.service.ProductService;
-import com.pos.soap.ws.ProductRequest;
-import com.pos.soap.ws.ProductResponse;
+import com.pos.soap.ws.*;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import java.util.List;
-
 @Endpoint
 public class ProductEndpoint {
 
-    private static final String NAMESPACE_URI = "http://pos.com/soap/ws";
+    private static final String NAMESPACE_URI = "http://pos.com/soap/products";
 
-    private final ProductService productService;
-
-    public ProductEndpoint(ProductService productService) {
-        this.productService = productService;
-    }
-
-    // Get all products
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAllProductsRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAllProductsRequest")
     @ResponsePayload
-    public ProductResponse getAllProducts(@RequestPayload ProductRequest request) {
-        List<Product> products = productService.getAllProducts();
-        ProductResponse response = new ProductResponse();
-        response.getProducts().addAll(products);
+    public GetAllProductsResponse getAllProducts(@RequestPayload GetAllProductsRequest request) {
+        GetAllProductsResponse response = new GetAllProductsResponse();
+        // TODO: implement logic to fetch all products
         return response;
     }
 
-    // Get product by ID
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetProductByIdRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveProductRequest")
     @ResponsePayload
-    public ProductResponse getProductById(@RequestPayload ProductRequest request) {
-        ProductResponse response = new ProductResponse();
-        productService.getProductById(request.getId())
-                .ifPresent(response::addProduct);
+    public SaveProductResponse saveProduct(@RequestPayload SaveProductRequest request) {
+        SaveProductResponse response = new SaveProductResponse();
+        // TODO: implement logic to save a product
         return response;
     }
 
-    // Create or update product
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SaveProductRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteProductRequest")
     @ResponsePayload
-    public ProductResponse saveProduct(@RequestPayload ProductRequest request) {
-        Product product = new Product();
-        product.setId(request.getId());
-        product.setName(request.getName());
-        product.setPrice(request.getPrice());
-        product.setQuantity(request.getQuantity());
-        product.setCategoryId(request.getCategoryId()); // using categoryId instead of Category object
-
-        Product savedProduct = productService.saveProduct(product);
-
-        ProductResponse response = new ProductResponse();
-        response.addProduct(savedProduct);
+    public DeleteProductResponse deleteProduct(@RequestPayload DeleteProductRequest request) {
+        DeleteProductResponse response = new DeleteProductResponse();
+        // TODO: implement logic to delete a product
+        response.setStatus("SUCCESS");
         return response;
     }
 
-    // Delete product
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DeleteProductRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getProductByIdRequest")
     @ResponsePayload
-    public ProductResponse deleteProduct(@RequestPayload ProductRequest request) {
-        productService.deleteProduct(request.getId());
-        return new ProductResponse(); // empty response
+    public GetProductByIdResponse getProductById(@RequestPayload GetProductByIdRequest request) {
+        GetProductByIdResponse response = new GetProductByIdResponse();
+        // TODO: implement logic to fetch product by ID
+        return response;
     }
 }

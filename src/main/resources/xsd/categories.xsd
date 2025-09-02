@@ -3,9 +3,7 @@
         targetNamespace="http://pos.com/soap/categories"
         xmlns:tns="http://pos.com/soap/categories"
         elementFormDefault="qualified">
-    <!-- ========================
-         CATEGORY TYPE (Reusable)
-    ========================= -->
+
     <xs:complexType name="category">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>

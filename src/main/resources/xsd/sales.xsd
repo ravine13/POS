@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.pos.com/soap/sale"
+           xmlns:tns="http://www.pos.com/soap/sale"
+           elementFormDefault="qualified">
+
+    <!-- Match your JPA entity fields 1:1 -->
+    <xs:complexType name="SaleType">
+        <xs:sequence>
+            <xs:element name="saleId" type="xs:long" minOccurs="0"/>
+            <xs:element name="cashierId" type="xs:long"/>
+            <xs:element name="customerId" type="xs:long"/>
+            <xs:element name="productId" type="xs:long"/>
+            <xs:element name="quantity" type="xs:int"/>
+            <xs:element name="totalPrice" type="xs:decimal"/>
+            <xs:element name="saleDate" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Operations -->
+    <xs:element name="GetAllSalesRequest">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="GetAllSalesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sales" type="tns:SaleType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetSaleByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="saleId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetSaleByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sale" type="tns:SaleType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Create/Update -->
+    <xs:element name="SaveSaleRequest" type="tns:SaleType"/>
+    <xs:element name="SaveSaleResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="saleId" type="xs:long"/>
+                <xs:element name="status" type="xs:string"/>
+                <xs:element name="message" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Delete -->
+    <xs:element name="DeleteSaleRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="saleId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeleteSaleResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

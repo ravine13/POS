@@ -4,10 +4,9 @@ import com.pos.soap.model.Order;
 import com.pos.soap.model.OrderItem;
 import com.pos.soap.model.Product;
 import com.pos.soap.service.OrderItemService;
-import com.pos.soap.service.OrderService;   // ✅ Added
-import com.pos.soap.service.ProductService; // ✅ Added
-import com.pos.soap.ws.OrderItemRequest;
-import com.pos.soap.ws.OrderItemResponse;
+import com.pos.soap.service.OrderService;
+import com.pos.soap.service.ProductService;
+import com.pos.soap.ws.*;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -18,7 +17,7 @@ import java.util.List;
 @Endpoint
 public class OrderItemEndpoint {
 
-    private static final String NAMESPACE_URI = "http://pos.com/soap/ws";
+    private static final String NAMESPACE_URI = "http://pos.com/soap/orderItems";
 
     private final OrderItemService orderItemService;
     private final OrderService orderService;     // ✅ Added

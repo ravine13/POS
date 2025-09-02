@@ -37,7 +37,7 @@ public class WebServiceConfig {
     // 3️⃣ XSD Schema for Categories
     @Bean
     public XsdSchema categoriesSchema() {
-        return new SimpleXsdSchema(new org.springframework.core.io.ClassPathResource("categories.xsd"));
+        return new SimpleXsdSchema(new org.springframework.core.io.ClassPathResource("xsd/categories.xsd"));
     }
 
 
@@ -53,7 +53,7 @@ public class WebServiceConfig {
 
     @Bean
     public XsdSchema productsSchema() {
-        return new SimpleXsdSchema(new org.springframework.core.io.ClassPathResource("products.xsd"));
+        return new SimpleXsdSchema(new org.springframework.core.io.ClassPathResource("xsd/products.xsd"));
     }
 
     // Do the same for Customer, Order, OrderItem, Sale, User

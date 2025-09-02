@@ -1,70 +1,47 @@
 package com.pos.soap.endpoint;
 
-import com.pos.soap.model.Customer;
-import com.pos.soap.service.CustomerService;
-import com.pos.soap.ws.CustomerRequest;
-import com.pos.soap.ws.CustomerResponse;
+
+import com.pos.soap.ws.*;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import java.util.List;
-
 @Endpoint
 public class CustomerEndpoint {
 
-    private static final String NAMESPACE_URI = "http://pos.com/soap/ws";
+    private static final String NAMESPACE_URI = "http://pos.com/soap/customers";
 
-    private final CustomerService customerService;
-
-    public CustomerEndpoint(CustomerService customerService) {
-        this.customerService = customerService;
-    }
-
-    // Get all customers
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAllCustomersRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAllCustomersRequest")
     @ResponsePayload
-    public CustomerResponse getAllCustomers(@RequestPayload CustomerRequest request) {
-        List<Customer> customers = customerService.getAllCustomers();
-        CustomerResponse response = new CustomerResponse();
-        response.getCustomers().addAll(customers);
+    public GetAllCustomersResponse getAllCustomers(@RequestPayload GetAllCustomersRequest request) {
+        GetAllCustomersResponse response = new GetAllCustomersResponse();
+        // TODO: implement logic to fetch all customers
         return response;
     }
 
-    // Get customer by ID
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetCustomerByIdRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getCustomerByIdRequest")
     @ResponsePayload
-    public CustomerResponse getCustomerById(@RequestPayload CustomerRequest request) {
-        CustomerResponse response = new CustomerResponse();
-        customerService.getCustomerById(request.getId())
-                .ifPresent(response::addCustomer);
+    public GetCustomerByIdResponse getCustomerById(@RequestPayload GetCustomerByIdRequest request) {
+        GetCustomerByIdResponse response = new GetCustomerByIdResponse();
+        // TODO: implement logic to fetch a customer by ID
         return response;
     }
 
-    // Create or update customer
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SaveCustomerRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveCustomerRequest")
     @ResponsePayload
-    public CustomerResponse saveCustomer(@RequestPayload CustomerRequest request) {
-        Customer customer = new Customer();
-        customer.setId(request.getId());
-        customer.setFirstName(request.getFirstName());
-        customer.setLastName(request.getLastName());
-        customer.setEmail(request.getEmail());
-        customer.setPhone(request.getPhone());
-
-        Customer savedCustomer = customerService.saveCustomer(customer);
-
-        CustomerResponse response = new CustomerResponse();
-        response.addCustomer(savedCustomer);
+    public SaveCustomerResponse saveCustomer(@RequestPayload SaveCustomerRequest request) {
+        SaveCustomerResponse response = new SaveCustomerResponse();
+        // TODO: implement logic to save a customer
         return response;
     }
 
-    // Delete customer
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DeleteCustomerRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteCustomerRequest")
     @ResponsePayload
-    public CustomerResponse deleteCustomer(@RequestPayload CustomerRequest request) {
-        customerService.deleteCustomer(request.getId());
-        return new CustomerResponse(); // empty response
+    public DeleteCustomerResponse deleteCustomer(@RequestPayload DeleteCustomerRequest request) {
+        DeleteCustomerResponse response = new DeleteCustomerResponse();
+        // TODO: implement logic to delete a customer
+        response.setStatus("SUCCESS");
+        return response;
     }
 }

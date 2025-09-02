@@ -2,8 +2,7 @@ package com.pos.soap.endpoint;
 
 
 import com.pos.soap.service.MpesaService;
-import com.pos.soap.ws.InitiateStkRequest;
-import com.pos.soap.ws.InitiateStkResponse;
+import com.pos.soap.ws.*;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;

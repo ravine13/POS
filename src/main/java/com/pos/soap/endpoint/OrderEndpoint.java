@@ -1,11 +1,10 @@
 package com.pos.soap.endpoint;
 
 import com.pos.soap.model.Order;
-import com.pos.soap.model.Customer; // ✅ Added import for Customer
+import com.pos.soap.model.Customer;
 import com.pos.soap.service.OrderService;
-import com.pos.soap.service.CustomerService; // ✅ Added import for CustomerService
-import com.pos.soap.ws.OrderRequest;
-import com.pos.soap.ws.OrderResponse;
+import com.pos.soap.service.CustomerService;
+import com.pos.soap.ws.*;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -16,74 +15,97 @@ import java.util.List;
 @Endpoint
 public class OrderEndpoint {
 
-    private static final String NAMESPACE_URI = "http://pos.com/soap/ws";
+    private static final String NAMESPACE_URI = "http://www.pos.com/soap/order";
 
     private final OrderService orderService;
-    private final CustomerService customerService; // ✅ Added CustomerService dependency
+    private final CustomerService customerService;
 
-    // ✅ Updated constructor to inject CustomerService as well
     public OrderEndpoint(OrderService orderService, CustomerService customerService) {
         this.orderService = orderService;
         this.customerService = customerService;
     }
 
+    // ===== Mappers =====
+    private OrderType toWs(Order e) {
+        if (e == null) return null;
+        OrderType o = new OrderType();
+        o.setId(e.getId());
+        o.setCustomerId(e.getCustomer().getId());
+        o.setOrderDate(e.getOrderDate()); // ensure e.getOrderDate() is XMLGregorianCalendar or map accordingly
+        o.setStatus(e.getStatus());
+        // TODO: map items if you persist them (iterate and add to o.getItems().getItem())
+        return o;
+    }
+
+    private Order toEntity(OrderType r) {
+        if (r == null) return null;
+        Order o = new Order();
+        o.setId(r.getId());
+        // customer fetched in save method using r.getCustomerId()
+        o.setOrderDate(r.getOrderDate());
+        o.setStatus(r.getStatus());
+        return o;
+    }
+
     // Get all orders
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAllOrdersRequest")
     @ResponsePayload
-    public OrderResponse getAllOrders(@RequestPayload OrderRequest request) {
+    public GetAllOrdersResponse getAllOrders(@RequestPayload GetAllOrdersRequest request) {
         List<Order> orders = orderService.getAllOrders();
-        OrderResponse response = new OrderResponse();
-        response.getOrders().addAll(orders);
+        GetAllOrdersResponse response = new GetAllOrdersResponse();
+        orders.stream().map(this::toWs).forEach(response.getOrder()::add);
         return response;
     }
 
     // Get order by ID
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetOrderByIdRequest")
     @ResponsePayload
-    public OrderResponse getOrderById(@RequestPayload OrderRequest request) {
-        OrderResponse response = new OrderResponse();
+    public GetOrderByIdResponse getOrderById(@RequestPayload GetOrderByIdRequest request) {
+        GetOrderByIdResponse response = new GetOrderByIdResponse();
         orderService.getOrderById(request.getId())
-                .ifPresent(response::addOrder);
+                .map(this::toWs)
+                .ifPresent(o -> response.getOrder().add(o));
         return response;
     }
 
     // Get orders by customer ID
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetOrdersByCustomerIdRequest")
     @ResponsePayload
-    public OrderResponse getOrdersByCustomerId(@RequestPayload OrderRequest request) {
+    public GetOrdersByCustomerIdResponse getOrdersByCustomerId(@RequestPayload GetOrdersByCustomerIdRequest request) {
         List<Order> orders = orderService.getOrdersByCustomerId(request.getCustomerId());
-        OrderResponse response = new OrderResponse();
-        response.getOrders().addAll(orders);
+        GetOrdersByCustomerIdResponse response = new GetOrdersByCustomerIdResponse();
+        orders.stream().map(this::toWs).forEach(response.getOrder()::add);
         return response;
     }
 
     // Create or update order
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SaveOrderRequest")
     @ResponsePayload
-    public OrderResponse saveOrder(@RequestPayload OrderRequest request) {
-        Order order = new Order();
-        order.setId(request.getId());
+    public SaveOrderResponse saveOrder(@RequestPayload SaveOrderRequest request) {
+        OrderType payload = request; // SaveOrderRequest is typed as OrderType in the XSD
+        Order toSave = toEntity(payload);
 
-        // ✅ CHANGED: Fetch customer from DB and set it
-        Customer customer = customerService.getCustomerById(request.getCustomerId())
+        Customer customer = customerService.getCustomerById(payload.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-        order.setCustomer(customer);
+        toSave.setCustomer(customer);
 
-        order.setOrderDate(request.getOrderDate());
-        order.setStatus(request.getStatus());
+        Order saved = orderService.saveOrder(toSave);
 
-        Order savedOrder = orderService.saveOrder(order);
-
-        OrderResponse response = new OrderResponse();
-        response.addOrder(savedOrder);
+        SaveOrderResponse response = new SaveOrderResponse();
+        response.getOrder().add(this::toWs.apply(saved)); // or response.getOrder().add(toWs(saved));
+        response.setStatus("SUCCESS");
+        response.setMessage("Order saved successfully");
         return response;
     }
 
     // Delete order
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DeleteOrderRequest")
     @ResponsePayload
-    public OrderResponse deleteOrder(@RequestPayload OrderRequest request) {
+    public DeleteOrderResponse deleteOrder(@RequestPayload DeleteOrderRequest request) {
         orderService.deleteOrder(request.getId());
-        return new OrderResponse(); // empty response
+        DeleteOrderResponse response = new DeleteOrderResponse();
+        response.setStatus("SUCCESS");
+        response.setMessage("Order deleted successfully");
+        return response;
     }
 }

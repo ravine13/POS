@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.pos.com/soap/order"
+           xmlns:tns="http://www.pos.com/soap/order"
+           elementFormDefault="qualified">
+
+    <!-- ===== Order item ===== -->
+    <xs:complexType name="OrderItem">
+        <xs:sequence>
+            <xs:element name="productId" type="xs:long"/>
+            <xs:element name="quantity" type="xs:int"/>
+            <xs:element name="price" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OrderItemList">
+        <xs:sequence>
+            <xs:element name="item" type="tns:OrderItem" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ===== Order type used in payloads ===== -->
+    <xs:complexType name="OrderType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" minOccurs="0"/>
+            <xs:element name="customerId" type="xs:long"/>
+            <xs:element name="orderDate" type="xs:dateTime"/>
+            <xs:element name="status" type="xs:string"/>
+            <xs:element name="items" type="tns:OrderItemList" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ===== Generic OrderRequest carrying one OrderType ===== -->
+    <xs:element name="OrderRequest" type="tns:OrderType"/>
+
+    <!-- ===== Generic OrderResponse; can carry a list or a single order plus status/message ===== -->
+    <xs:complexType name="OrderResponseType">
+        <xs:sequence>
+            <xs:element name="order" type="tns:OrderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="status" type="xs:string" minOccurs="0"/>
+            <xs:element name="message" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="OrderResponse" type="tns:OrderResponseType"/>
+
+    <!-- ===== Get all orders ===== -->
+    <xs:element name="GetAllOrdersRequest">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="GetAllOrdersResponse" type="tns:OrderResponseType"/>
+
+    <!-- ===== Get order by id ===== -->
+    <xs:element name="GetOrderByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetOrderByIdResponse" type="tns:OrderResponseType"/>
+
+    <!-- ===== Get orders by customer id ===== -->
+    <xs:element name="GetOrdersByCustomerIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="customerId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetOrdersByCustomerIdResponse" type="tns:OrderResponseType"/>
+
+    <!-- ===== Save (create/update) ===== -->
+    <xs:element name="SaveOrderRequest" type="tns:OrderType"/>
+    <xs:element name="SaveOrderResponse" type="tns:OrderResponseType"/>
+
+    <!-- ===== Delete ===== -->
+    <xs:element name="DeleteOrderRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DeleteOrderResponse" type="tns:OrderResponseType"/>
+
+</xs:schema>
